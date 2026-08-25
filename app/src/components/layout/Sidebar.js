@@ -92,9 +92,9 @@ export default function Sidebar() {
             </button>
 
             {expandedClients[client.id] && (
-              <div className="sidebar-sub-items">
+              <div className="sidebar-sub-items" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                 {Object.entries(client.categories).map(([catKey, cat]) => (
-                  <div key={catKey}>
+                  <div key={catKey} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                     <Link
                       href={`/${client.id}/${catKey}`}
                       className={`sidebar-sub-item ${isActive(`/${client.id}/${catKey}`) ? 'active' : ''}`}
