@@ -1,0 +1,20 @@
+:root{
+/* Medidas fijas verificadas en el PDF exportado */
+--page-width:675.12pt; /* @kind spacing */         /* fijo, nunca cambia */
+--header-height:366pt; /* @kind spacing */      /* fijo, desde el borde superior al fin del fondo oscuro */
+--page-padding-x:42pt;
+--footer-band-height:36pt; /* @kind spacing */
+--table-label-col:16.8%;   /* ancho del rotulo de categoria, medido en la ficha aprobada */
+
+--radius-card:11.5pt;
+--radius-table:11.5pt;
+--radius-pill:999px;
+--radius-none:0;
+
+--icon-circle-size:36pt;
+--bullet-size:7pt;
+--logo-header-height:22.5pt; /* @kind spacing */
+--logo-footer-height:22.5pt; /* @kind spacing */
+--logo-partner-height:25.5pt; /* @kind spacing */
+--footer-logos-height:76.5pt; /* @kind spacing */
+}

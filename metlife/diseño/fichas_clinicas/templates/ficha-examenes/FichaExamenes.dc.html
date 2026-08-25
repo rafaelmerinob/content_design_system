@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Ficha Seguro Exámenes Interclínica" description="Ficha de producto MetLife · Interclínica para el Seguro de Exámenes, armada con los datos del folleto informativo." -->
+<helmet><script src="./ds-base.js"></script><style>body{margin:0;background:#DCE1E6}</style></helmet>
+<div style="padding:24pt 0 40pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.FichaPage" style="box-shadow:0 10px 30px rgba(0,54,82,.18)" hint-size="675pt,1400pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.FichaHeader" asset-base="../../assets/" photo="../../assets/photo-header-examenes.jpg" badge="Capital UF 25 por asegurado" title="{{ titulo }}" hint-size="100%,366pt"></x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.FichaBody" hint-size="100%,900pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.IntroParagraph" hint-size="100%,60pt">Un seguro que te entrega respaldo económico para tus exámenes de laboratorio e imagenología ambulatoria, reembolsando parte de tu gasto para que puedas cuidar tu salud con mayor tranquilidad.</x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.KeyDataGrid" asset-base="../../assets/" items="{{ keyData }}" hint-size="100%,80pt"></x-import>
+<div style="display:grid;gap:10pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.SectionTitle" hint-size="100%,24pt">Reembolsa prestaciones</x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.DataTable" columns="{{ colCoberturas }}" groups="{{ grpCoberturas }}" notes="{{ notasCoberturas }}" hint-size="100%,140pt"></x-import>
+</div>
+<div style="display:grid;gap:10pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.SectionTitle" hint-size="100%,24pt">Primas mensuales</x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.DataTable" columns="{{ colPrimas }}" groups="{{ grpPrimas }}" hint-size="100%,180pt"></x-import>
+</div>
+<div style="display:grid;gap:10pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.SectionTitle" hint-size="100%,24pt">Consideraciones importantes</x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.DataTable" columns="{{ colEdades }}" groups="{{ grpEdades }}" notes="{{ notasEdades }}" hint-size="100%,140pt"></x-import>
+</div>
+<div style="display:grid;gap:10pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.SectionTitle" hint-size="100%,24pt">Inscripción de recién nacidos</x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.DataTable" columns="{{ colRN }}" groups="{{ grpRN }}" hint-size="100%,140pt"></x-import>
+</div>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.GeneralConditions" items="{{ condiciones }}" hint-size="100%,160pt"></x-import>
+</x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.FichaFooter" asset-base="../../assets/" partner-logo="../../assets/logo-interclinica-horizontal.png" partner-name="Interclínica" alliance-line="Alianza MetLife · Interclínica" hint-size="100%,113pt"></x-import>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:940,&quot;height&quot;:1600}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      titulo: 'Seguro Exámenes\nInterclínica',
+      keyData: [
+        { icon: 'ShieldProtection', value: 'UF 25', label: 'Capital asegurado por asegurado' },
+        { icon: 'FinancialStrength', value: 'UF 0,5', label: 'Deducible por asegurado' },
+      ],
+      colCoberturas: [
+        { key: 'p', label: 'Prestaciones', width: '20.6%' },
+        { key: 'r', label: 'Reembolso máximo por prestación', width: '15.1%' },
+        { key: 's', label: 'Cobertura sin bonificación ISAPRE/FONASA (1)', width: '19.5%' },
+        { key: 't', label: 'Tope por prestación por asegurado', width: '14.4%' },
+        { key: 'a', label: 'Tope máximo anual por beneficiario', width: '13.6%' },
+      ],
+      grpCoberturas: [{ label: 'Exámenes', rows: [
+        { p: 'Exámenes imagenología amb., laboratorio amb. e imagenología amb. alto costo', r: '30%', s: '15%', t: '\u2014', a: '\u2014' },
+      ] }],
+      notasCoberturas: ['(1) Una vez presentada la nota de reembolso de $0 emitida por la Isapre o Fonasa, o el documento en el que se indique "no cubierto".'],
+      colPrimas: [
+        { key: 'g', label: 'Tramo', width: '40%' },
+        { key: 'n', label: 'Tarifa neta en UF', align: 'right' },
+        { key: 'i', label: 'IVA', align: 'right' },
+        { key: 'b', label: 'Tarifa bruta en UF', align: 'right' },
+      ],
+      grpPrimas: [{ rows: [
+        { g: 'Titular sin asegurados dependientes', n: '0,1602', i: '0,0304', b: '0,1906' },
+        { g: 'Titular + 1 asegurado dependiente', n: '0,2186', i: '0,0415', b: '0,2601' },
+        { g: 'Titular + 2 asegurados dependientes', n: '0,2934', i: '0,0557', b: '0,3491' },
+        { g: 'Titular + 3 asegurados dependientes', n: '0,3795', i: '0,0721', b: '0,4516' },
+        { g: 'Carga adicional', n: '0,0861', i: '0,0164', b: '0,1025' },
+      ] }],
+      colEdades: [
+        { key: 'p', label: 'Persona asegurada', width: '34%' },
+        { key: 'min', label: 'Edad mínima de ingreso' },
+        { key: 'max', label: 'Edad máxima de ingreso' },
+        { key: 'per', label: 'Edad máxima de permanencia' },
+      ],
+      grpEdades: [{ rows: [
+        { p: 'Titular, cónyuge, conviviente civil o pareja', min: '18 años (*)', max: '59 años y 364 días', per: '64 años y 364 días' },
+        { p: 'Hijos(as) y nietos(as)', min: '14 días (**)', max: '22 años y 364 días', per: '23 años y 364 días' },
+      ] }],
+      notasEdades: [
+        '(*) Los menores de 18 años podrán ser titulares si la compañía aseguradora aprueba la Solicitud de Incorporación y DPS, y el pagador tiene vínculo de parentesco.',
+        '(**) Los recién nacidos ingresan según el periodo de vigencia de la madre en la póliza.',
+      ],
+      colRN: [
+        { key: 'v', label: 'Periodo de vigencia de la madre en la póliza', width: '34%' },
+        { key: 'd', label: 'Inscripción del hijo: desde' },
+        { key: 'h', label: 'Inscripción del hijo: hasta' },
+        { key: 's', label: 'Suscripción y evaluación (DPS)' },
+      ],
+      grpRN: [{ rows: [
+        { v: 'Mayor o igual a 12 meses', d: 'Desde 7 meses de gestación', h: 'Nacimiento', s: 'No' },
+        { v: 'Mayor o igual a 12 meses', d: 'Después de 14 días de nacido', h: 'En adelante', s: 'Sí' },
+        { v: 'Menor a 12 meses', d: 'Día 14 de nacido', h: 'En adelante', s: 'Sí' },
+      ] }],
+      condiciones: [
+        'Todos los asegurados deberán completar el formulario "Propuesta de Seguro" o "Solicitud de Incorporación al Seguro", y una DPS (Declaración Personal de Salud).',
+        'La compañía aseguradora establecerá restricciones y limitaciones de cobertura respecto a situaciones o enfermedades preexistentes declaradas.',
+        'La póliza no cubre situaciones y enfermedades preexistentes.',
+        'Es exclusivo para atenciones en la Red Interclínica.',
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

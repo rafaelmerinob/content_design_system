@@ -1,0 +1,17 @@
+:root{
+--space-1:4pt;
+--space-2:8pt;
+--space-3:12pt;
+--space-4:16pt;
+--space-5:24pt;
+--space-6:32pt;
+--space-7:40pt;
+--space-8:56pt;
+
+--gap-cards:12pt;              /* separacion entre las 2 tarjetas de datos clave */
+--gap-block:26pt;              /* separacion entre bloques de la ficha */
+--gap-section-title:10pt;      /* titulo de seccion -> tabla */
+--gap-legal:6pt;               /* tabla -> legales */
+--cell-padding-y:9pt;
+--cell-padding-x:12pt;
+}

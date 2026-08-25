@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<!-- @template name="Ficha de producto" description="Ficha de producto MetLife de una página: header, datos clave, tablas, condiciones generales y footer de alianza." -->
+<helmet><script src="./ds-base.js"></script><style>body{margin:0;background:#DCE1E6}</style></helmet>
+<div style="padding:24pt 0 40pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.FichaPage" style="box-shadow:0 10px 30px rgba(0,54,82,.18)" hint-size="675pt,1000pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.FichaHeader" asset-base="../../assets/" badge="{{ badge }}" title="{{ titulo }}" hint-size="100%,353pt"></x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.FichaBody" hint-size="100%,600pt">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.IntroParagraph" hint-size="100%,60pt">{{ intro }}</x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.KeyDataGrid" asset-base="../../assets/" items="{{ keyData }}" hint-size="100%,80pt"></x-import>
+<sc-for list="{{ tablas }}" as="t" hint-placeholder-count="1">
+<div style="display:grid;gap:10pt">
+<sc-if value="{{ t.title }}" hint-placeholder-val="{{ true }}">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.SectionTitle" hint-size="100%,24pt">{{ t.title }}</x-import>
+</sc-if>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.DataTable" columns="{{ t.columns }}" groups="{{ t.groups }}" notes="{{ t.notes }}" hint-size="100%,220pt"></x-import>
+</div>
+</sc-for>
+<sc-if value="{{ mostrarCondiciones }}" hint-placeholder-val="{{ true }}">
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.GeneralConditions" items="{{ condiciones }}" hint-size="100%,160pt"></x-import>
+</sc-if>
+</x-import>
+<x-import component-from-global-scope="FichasMetLifeDesignSystem_6917a8.FichaFooter" asset-base="../../assets/" partner-logo="../../assets/logo-interclinica.png" partner-name="{{ clinica }}" alliance-line="{{ alianza }}" hint-size="100%,110pt"></x-import>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:940,&quot;height&quot;:1400},&quot;producto&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ambulatorio&quot;,&quot;catastrofico&quot;],&quot;default&quot;:&quot;catastrofico&quot;,&quot;tsType&quot;:&quot;'ambulatorio' | 'catastrofico'&quot;,&quot;section&quot;:&quot;Contenido&quot;},&quot;titulo&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenido&quot;},&quot;badge&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenido&quot;},&quot;clinica&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Interclínica&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Alianza&quot;},&quot;mostrarCondiciones&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Contenido&quot;}}">
+const DATA = {
+  ambulatorio: {
+    titulo: 'Seguro Ambulatorio\nInterclínica',
+    badge: 'Capital UF 100 por asegurado',
+    intro: 'Un seguro que te entrega respaldo económico para tus consultas médicas, cirugías y exámenes ambulatorios, reembolsando parte de tu gasto para que puedas cuidar tu salud con mayor tranquilidad.',
+    keyData: [
+      { icon: 'ShieldProtection', value: 'UF 100', label: 'Capital asegurado por asegurado' },
+      { icon: 'FinancialStrength', value: 'UF 0,5', label: 'Deducible por asegurado' },
+    ],
+    tablas: [{
+      title: 'Reembolsa prestaciones',
+      columns: [
+        { key: 'p', label: 'Prestaciones', width: '20.6%' },
+        { key: 'r', label: 'Reembolso máximo por prestación', width: '15.1%' },
+        { key: 's', label: 'Cobertura sin bonificación ISAPRE/FONASA (1)', width: '19.5%' },
+        { key: 't', label: 'Tope por prestación por asegurado', width: '14.4%' },
+        { key: 'a', label: 'Tope máximo anual por beneficiario', width: '13.6%' },
+      ],
+      groups: [{ label: 'Ambulatorio', rows: [
+        { p: 'Consulta médica (2)', r: '50%', s: '0%', t: 'UF 1', a: '\u2014' },
+        { p: 'Cirugía ambulatoria', r: '50%', s: '0%', t: '\u2014', a: '\u2014' },
+        { p: 'Exámenes imagenología amb., laboratorio amb. e imagenología amb. alto costo', r: '50%', s: '0%', t: '\u2014', a: '\u2014' },
+        { p: 'Procedimientos de diagnóstico (3)', r: '50%', s: '0%', t: '\u2014', a: '\u2014' },
+        { p: 'Procedimientos quirúrgicos (3)', r: '50%', s: '0%', t: '\u2014', a: '\u2014' },
+        { p: 'Procedimientos terapéuticos', r: '50%', s: '0%', t: 'UF 0,8', a: 'UF 8' },
+      ] }],
+      notes: [
+        '(1) Una vez presentada la nota de reembolso de $0 emitida por la Isapre o Fonasa, o el documento en el que se indique "no cubierto".',
+        '(2) Considera consulta urgencia.',
+        '(3) Se incluyen los medicamentos suministrados en la atención de urgencias dentro de la Red Interclínica.',
+      ],
+    }, {
+      title: 'Primas mensuales',
+      columns: [
+        { key: 'g', label: 'Grupo familiar', width: '40%' },
+        { key: 'n', label: 'Tarifa neta en UF', align: 'right' },
+        { key: 'i', label: 'IVA', align: 'right' },
+        { key: 'b', label: 'Tarifa bruta en UF', align: 'right' },
+      ],
+      groups: [{ rows: [
+        { g: 'Titular sin asegurados dependientes', n: '0,2297', i: '0,0436', b: '0,2733' },
+        { g: 'Titular + 1 asegurado dependiente', n: '0,4371', i: '0,0830', b: '0,5201' },
+        { g: 'Titular + 2 asegurados dependientes', n: '0,6443', i: '0,1224', b: '0,7667' },
+        { g: 'Titular + 3 asegurados dependientes', n: '0,8516', i: '0,1618', b: '1,0134' },
+        { g: 'Carga adicional', n: '0,2073', i: '0,0394', b: '0,2467' },
+      ] }],
+      notes: [],
+    }, {
+      title: 'Consideraciones importantes',
+      columns: [
+        { key: 'p', label: 'Persona asegurada', width: '34%' },
+        { key: 'min', label: 'Edad mínima de ingreso' },
+        { key: 'max', label: 'Edad máxima de ingreso' },
+        { key: 'per', label: 'Edad máxima de permanencia' },
+      ],
+      groups: [{ rows: [
+        { p: 'Titular, cónyuge, conviviente civil o pareja', min: '18 años (*)', max: '69 años y 364 días', per: '79 años y 364 días' },
+        { p: 'Hijos(as) y nietos(as)', min: '14 días (**)', max: '22 años y 364 días', per: '23 años y 364 días' },
+      ] }],
+      notes: [
+        '(*) Los menores de 18 años podrán ser titulares si la compañía aseguradora aprueba la Solicitud de Incorporación y DPS, y el pagador tiene vínculo de parentesco.',
+        '(**) Los recién nacidos ingresan según el periodo de vigencia de la madre en la póliza.',
+      ],
+    }],
+  },
+  catastrofico: {
+    titulo: 'Seguro Catastrófico\nInterclínica',
+    badge: 'Capital UF 10.000 por asegurado',
+    intro: 'Un seguro que te entrega un respaldo económico ante gastos médicos de alto costo, hospitalarios y ambulatorios, para enfrentar con mayor tranquilidad los eventos de salud más complejos.',
+    keyData: [
+      { icon: 'ShieldProtection', value: 'UF 10.000', label: 'Capital asegurado por asegurado' },
+      { icon: 'FinancialStrength', value: 'UF 40', label: 'Deducible hasta los 69 años' },
+    ],
+    tablas: [{
+      title: null,
+      columns: [
+        { key: 'e', label: 'Edad hasta', width: '46%' },
+        { key: 'm', label: 'Monto máximo de reembolso (UF)', align: 'right' },
+        { key: 'd', label: 'Deducible (UF)', align: 'right' },
+      ],
+      groups: [{ rows: [
+        { e: '69 años', m: '10.000', d: '40' },
+        { e: '70 - 74 años', m: '3.500', d: '150' },
+        { e: '75 - 79 años', m: '3.500', d: '250' },
+        { e: '80 años en adelante (*)', m: '3.500', d: '350' },
+      ] }],
+      notes: [],
+    }, {
+      title: 'Reembolsa prestaciones',
+      columns: [
+        { key: 'p', label: 'Prestaciones', width: '23.9%' },
+        { key: 'c', label: 'Cobertura con bonificación ISAPRE/FONASA', width: '20%' },
+        { key: 's', label: 'Cobertura sin bonificación ISAPRE/FONASA (0)', width: '24.1%' },
+        { key: 't', label: 'Tope por prestación', width: '15.1%' },
+      ],
+      groups: [
+        { label: 'Hospitalario', rows: [
+          { p: 'Día Cama Medicina; UTI; UCI; Intermedio; Recuperación', c: '100%', s: '50%', t: 'Sin Tope' },
+          { p: 'Servicio Hospitalario (1)', c: '100%', s: '50%', t: 'Sin Tope' },
+          { p: 'Honorarios Médico Quirúrgicos', c: '100%', s: '50%', t: 'Sin Tope' },
+          { p: 'Cirugía Dental por Accidente', c: '100%', s: '50%', t: 'Sin Tope' },
+          { p: 'Hospitalización Domiciliaria', c: '100%', s: '50%', t: 'Arancel día cama Red Interclínica' },
+          { p: 'Servicio de Ambulancia (2)', c: '100%', s: '50%', t: 'UF 10 si el asegurado es hospitalizado' },
+        ] },
+        { label: 'Ambulatorio', rows: [
+          { p: 'Consultas Médicas', c: '100%', s: '50%', t: 'Sin Tope' },
+          { p: 'Cirugía Ambulatoria', c: '100%', s: '50%', t: 'Sin Tope' },
+          { p: 'Exámenes de Laboratorio e imágenes', c: '100%', s: '50%', t: 'Sin Tope' },
+          { p: 'Procedimientos de Diagnósticos y Terapéuticos', c: '100%', s: '50%', t: 'Sin Tope' },
+        ] },
+        { label: 'Otros', rows: [
+          { p: 'Medicamentos Ambulatorios (3)', c: '50%', s: '25%', t: 'Sin Tope' },
+          { p: 'Kinesiología Ambulatoria', c: '100%', s: '50%', t: 'Sin Tope' },
+          { p: 'Atención por Radioterapia, Quimioterapia y Diálisis', c: '100%', s: '50%', t: 'Sin Tope' },
+        ] },
+      ],
+      notes: [],
+    }],
+  },
+};
+
+const CONDICIONES_BASE = [
+  'Todos los asegurados deberán completar el formulario "Propuesta de Seguro" o "Solicitud de Incorporación al Seguro", y una DPS (Declaración Personal de Salud).',
+  'La compañía aseguradora establecerá restricciones y limitaciones de cobertura respecto a situaciones o enfermedades preexistentes declaradas.',
+  'La póliza no cubre situaciones y enfermedades preexistentes.',
+];
+
+class Component extends DCLogic {
+  renderVals() {
+    const p = this.props;
+    const d = DATA[p.producto] || DATA.catastrofico;
+    const clinica = p.clinica ?? 'Interclínica';
+    return {
+      titulo: p.titulo || d.titulo,
+      badge: p.badge || d.badge,
+      intro: d.intro,
+      keyData: d.keyData,
+      tablas: d.tablas,
+      condiciones: [...CONDICIONES_BASE, 'Es exclusivo para atenciones en la Red ' + clinica + '.'],
+      mostrarCondiciones: p.mostrarCondiciones ?? true,
+      clinica,
+      alianza: 'Alianza MetLife · ' + clinica,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+/* Fuentes reales del sistema: IvyPresto (display) + Inter (cuerpo).
+   Cada archivo se identifico leyendo su tabla `name` (nameID 4) y el italicAngle de `post`;
+   los nombres de archivo entregados NO correspondian a su contenido.
+
+   Romanas disponibles:
+     IvyPresto Text     -> Thin 100, Light 300, SemiBold 600, Bold 700  (no hay Regular 400)
+     IvyPresto Headline -> Thin 100, Light 300, SemiBold 600            (no hay Regular ni Bold romanos)
+   Cursivas disponibles:
+     IvyPresto Display  -> Thin 100, Light 300, SemiBold 600, Bold 700  (TODAS cursivas a -12 grados;
+                           no se entrego ninguna romana de esta familia, por eso no es la del titular) */
+@font-face{font-family:"IvyPresto Text";src:url("../assets/fonts/IvyPresto-Text-Thin.otf") format("opentype");font-weight:100;font-style:normal;font-display:swap}
+@font-face{font-family:"IvyPresto Text";src:url("../assets/fonts/IvyPresto-Text-Light.otf") format("opentype");font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:"IvyPresto Text";src:url("../assets/fonts/IvyPresto-Text-SemiBold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"IvyPresto Text";src:url("../assets/fonts/IvyPresto-Text-Bold.otf") format("opentype");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:"IvyPresto Headline";src:url("../assets/fonts/IvyPresto-Headline-Thin.otf") format("opentype");font-weight:100;font-style:normal;font-display:swap}
+@font-face{font-family:"IvyPresto Headline";src:url("../assets/fonts/IvyPresto-Headline-Light.otf") format("opentype");font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:"IvyPresto Headline";src:url("../assets/fonts/IvyPresto-Headline-SemiBold.otf") format("opentype");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"IvyPresto Display";src:url("../assets/fonts/IvyPresto-Display-ThinItalic.otf") format("opentype");font-weight:100;font-style:italic;font-display:swap}
+@font-face{font-family:"IvyPresto Display";src:url("../assets/fonts/IvyPresto-Display-LightItalic.otf") format("opentype");font-weight:300;font-style:italic;font-display:swap}
+@font-face{font-family:"IvyPresto Display";src:url("../assets/fonts/IvyPresto-Display-SemiBoldItalic.otf") format("opentype");font-weight:600;font-style:italic;font-display:swap}
+@font-face{font-family:"IvyPresto Display";src:url("../assets/fonts/IvyPresto-Display-BoldItalic.otf") format("opentype");font-weight:700;font-style:italic;font-display:swap}

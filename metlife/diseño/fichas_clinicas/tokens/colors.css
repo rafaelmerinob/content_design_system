@@ -1,0 +1,47 @@
+:root{
+/* --- Base: azules --- */
+--blue-950:#003652;            /* header de tabla, footer, texto, conector "+" */
+--blue-200:#CBF1FF;            /* rotulo categoria 1 - Hospitalario */
+--teal-200:#D1FAF9;            /* rotulo categoria 2 - Ambulatorio */
+/* --- Base: verdes --- */
+--green-300:#8FF5B1;           /* verde de marca: vinetas, link de footer */
+--green-100:#CFFBE4;           /* relleno de tarjetas de datos clave (medido en ficha aprobada) */
+/* --- Base: neutros --- */
+--warm-gray-200:#F5F2ED;       /* rotulo categoria 3 - Otros */
+--gray-100:#F5F6F8;            /* fila alternada (zebra) */
+--gray-200:#E7EAEF;            /* rotulo de categoria unica */
+--gray-250:#E2E6E9;            /* filetes de 0,75pt: tablas y franja de logos */
+--gray-700:#5B6770;            /* legales / notas al pie */
+--white:#FFFFFF;
+
+/* --- Semanticos: texto --- */
+--text-heading:var(--blue-950);
+--text-body:var(--blue-950);
+--text-legal:var(--gray-700);
+--text-on-dark:var(--white);
+--link-on-dark:var(--green-300);
+
+/* --- Semanticos: superficies --- */
+--surface-page:var(--white);
+--surface-key-data:var(--green-100);
+--surface-list-card:var(--warm-gray-200);  /* tarjeta de nomina (BulletGrid) */
+--surface-table-header:var(--blue-950);
+--surface-row:var(--white);
+--surface-row-zebra:var(--gray-100);
+--surface-footer-band:var(--blue-950);
+--surface-header-overlay:rgba(0,54,82,.72);
+
+/* --- Semanticos: rotulos de categoria (orden fijo) --- */
+--category-1:var(--blue-200);        /* Hospitalario */
+--category-2:var(--teal-200);        /* Ambulatorio */
+--category-3:var(--warm-gray-200);   /* Otros */
+--category-single:var(--gray-200);   /* tabla de una sola categoria */
+
+/* --- Semanticos: piezas --- */
+--icon-circle-bg:var(--blue-950);
+--icon-glyph:var(--white);
+--bullet-color:var(--green-300);
+--connector-color:var(--blue-950);
+--rule-hairline:var(--gray-250);
+--badge-fill:rgba(255,255,255,.349);   /* medido en la ficha aprobada */
+}

@@ -1,0 +1,30 @@
+:root{
+--font-display:"IvyPresto Text",Georgia,serif;        /* titular y cifras: unica IvyPresto romana completa */
+--font-headline:"IvyPresto Headline","IvyPresto Text",Georgia,serif;
+--font-display-italic:"IvyPresto Display","IvyPresto Text",Georgia,serif; /* solo cursiva */
+--font-body:"Inter",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+
+--weight-regular:400;
+--weight-medium:500;
+--weight-semibold:600;
+--weight-bold:700;
+--weight-display:700;          /* IvyPresto Text Bold real; no hay negrita sintetica */
+
+/* Escala en pt: la ficha es un PDF, no una pagina web. */
+--text-headline:42pt;          /* titulo de producto, 2 lineas maximo */
+--text-headline-lh:1.19;
+--text-numeral:30pt;           /* cifra grande de tarjeta de datos clave */
+--text-numeral-lh:1.05;
+--text-section:16pt;           /* titulo de seccion con vineta verde */
+--text-conditions:15pt;        /* CONDICIONES GENERALES (mayuscula completa) */
+--text-intro:14pt;             /* parrafo introductorio, medido en la ficha aprobada */
+--text-intro-lh:1.57;          /* 22pt de interlinea */
+--text-body-size:10pt;         /* bullets y textos de apoyo */
+--text-body-lh:1.6;
+--text-table:9.5pt;            /* celdas y encabezados de tabla */
+--text-table-lh:1.35;
+--text-badge:10pt;
+--text-legal-size:8.5pt;       /* legales: 8-9pt, nunca hereda el cuerpo */
+--text-legal-lh:1.45;
+--tracking-conditions:.02em;
+}

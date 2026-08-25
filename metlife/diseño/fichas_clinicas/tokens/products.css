@@ -1,0 +1,29 @@
+/* --- Brand packs de producto ---------------------------------------------
+   Un producto puede traer logo propio y acentos propios (su KV). Esos acentos
+   viven SIEMPRE dentro de [data-product="..."], nunca en :root.
+
+   REGLA DURA: las fichas de clinica no llevan data-product. Su look es el
+   aprobado por el cliente y no admite acentos de producto. Si una ficha de
+   clinica necesita un color que no esta en tokens/colors.css, es un error.
+
+   Alcance permitido: fichas comerciales y tecnicas de ese producto.
+   ------------------------------------------------------------------------ */
+
+/* Valores neutros por defecto: sin producto, el acento es el verde del sistema. */
+:root{
+--product-accent:var(--green-300);
+--product-accent-soft:var(--blue-200);
+--product-kv-overlay:var(--surface-header-overlay);
+--product-logo:none; /* @kind other */
+}
+
+/* --- Cancer360 (agosto 2026) ---
+   Medido del KV y del logo entregados por el cliente. */
+[data-product="cancer360"]{
+--product-accent:#2BF5AE;            /* verde del numeral "360" */
+--product-accent-soft:#B7F0FF;       /* pildora "Seguro" del lockup */
+--product-kv-navy:#012639;           /* base del KV, mas oscuro que --blue-950 */
+--product-kv-overlay:rgba(1,38,57,.78);
+--product-price-band:var(--green-300); /* la banda de precio del KV ES #8FF5B1 del sistema */
+--product-logo:url("../assets/logo-cancer360.png"); /* @kind other */
+}
