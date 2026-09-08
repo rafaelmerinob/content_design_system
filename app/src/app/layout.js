@@ -1,6 +1,7 @@
 import './globals.css';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
+import ThemeProviderWrapper from '@/components/layout/ThemeProviderWrapper';
 
 export const metadata = {
   title: 'Content IA System — Design Tools',
@@ -9,17 +10,19 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body>
-        <div className="app-layout">
-          <Sidebar />
-          <div className="main-area">
-            <Header />
-            <main className="page-content fade-in">
-              {children}
-            </main>
+        <ThemeProviderWrapper>
+          <div className="app-layout">
+            <Sidebar />
+            <div className="main-area">
+              <Header />
+              <main className="page-content fade-in">
+                {children}
+              </main>
+            </div>
           </div>
-        </div>
+        </ThemeProviderWrapper>
       </body>
     </html>
   );

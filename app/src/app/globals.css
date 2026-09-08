@@ -1,7 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
+@font-face {
+  font-family: 'IvyPresto';
+  src: url('/fonts/fonnts.com-Ivy-Presto-Text-.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'IvyPresto';
+  src: url('/fonts/fonnts.com-Ivy-Presto-Text-Semi-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 :root {
-  /* ── Surface ── */
+  /* ── Surface (Dark) ── */
   --bg-primary: #0a0e1a;
   --bg-secondary: #111827;
   --bg-card: #1a1f2e;
@@ -26,19 +39,20 @@
   --info: #60a5fa;
   --info-soft: rgba(96, 165, 250, 0.12);
 
-  /* ── Text ── */
+  /* ── Text (Dark) ── */
   --text-primary: #f1f5f9;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
   --text-accent: var(--accent);
 
-  /* ── Borders ── */
+  /* ── Borders (Dark) ── */
   --border: rgba(255, 255, 255, 0.06);
   --border-hover: rgba(255, 255, 255, 0.12);
   --border-accent: rgba(129, 140, 248, 0.3);
 
   /* ── Typography ── */
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'IvyPresto', Georgia, serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
   /* ── Radius ── */
@@ -48,7 +62,7 @@
   --radius-xl: 20px;
   --radius-full: 999px;
 
-  /* ── Shadows ── */
+  /* ── Shadows (Dark) ── */
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
   --shadow-md: 0 4px 16px rgba(0,0,0,0.3);
   --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
@@ -63,6 +77,47 @@
   --transition-base: 200ms ease;
   --transition-slow: 300ms ease;
 }
+
+[data-theme='light'] {
+  /* ── Surface (Light) ── */
+  --bg-primary: #F4F7FE;
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-card-hover: #F8FAFC;
+  --bg-sidebar: #FFFFFF;
+  --bg-input: #F1F5F9;
+  --bg-overlay: rgba(255, 255, 255, 0.85);
+
+  /* ── Accent ── */
+  --accent: #4318FF;
+  --accent-hover: #3311DB;
+  --accent-soft: rgba(67, 24, 255, 0.08);
+  --accent-glow: rgba(67, 24, 255, 0.15);
+
+  /* ── Text (Light) ── */
+  --text-primary: #2B3674;
+  --text-secondary: #707EAE;
+  --text-muted: #A3AED0;
+  --text-accent: var(--accent);
+
+  /* ── Borders (Light) ── */
+  --border: rgba(0, 0, 0, 0.04);
+  --border-hover: rgba(0, 0, 0, 0.08);
+  --border-accent: rgba(67, 24, 255, 0.2);
+
+  /* ── Shadows (Light / Soft) ── */
+  --shadow-sm: 0px 2px 5px rgba(0, 0, 0, 0.02);
+  --shadow-md: 0px 4px 15px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0px 10px 30px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 20px var(--accent-glow);
+  
+  /* ── Radius (More rounded for Light theme) ── */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+}
+
 
 /* ── Reset ── */
 *, *::before, *::after {

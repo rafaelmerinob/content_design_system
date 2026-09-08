@@ -1,0 +1,271 @@
+# MetLife Chile — Design System
+
+A brand-faithful design system for **MetLife Chile**, built from the official **MetLife Brand
+Book, Version 1.0 (updated June 22, 2026)** plus the supplied logo and font binaries.
+
+MetLife is a 158-year-old insurance, annuities and employee-benefits company. The Chilean
+operation sells life, supplemental health, personal accident and savings products to
+individuals, to companies (employee benefits) and through advisers. The brand book governs
+the *evolved* MetLife brand: a single iconic "M" symbol, Blue 950 as the anchor, Green 400
+as a limited emphasis colour, IvyPresto Text for editorial voice and Inter for everything
+functional.
+
+Everything here comes from that material. Where the source is silent, the gap is named
+rather than filled with invention.
+
+## Sources
+
+| Source | What came from it |
+| --- | --- |
+| `uploads/01_Fundamentos_y_Logo.pdf` | Purpose, promises, brand experience principles, logo suite, clear space, monochrome rules |
+| `uploads/02_Arquitectura_y_Color.pdf` | Product / Solution / hero-solution lockups, co-branding, the full colour system with hex, RGB, CMYK and PMS values |
+| `uploads/03_Logo_y_Tipografia.pdf` | Colour best practices, typefaces, weights, hierarchy, type setting, italics, type over photography |
+| `uploads/04_Imagenes_e_Ilustracion.pdf` | Photography principles, Window M, illustration and iconography types and best practices |
+| `uploads/05_Layout_Motion_Fisico.pdf` | Grid construction, rounded frame containers, grid setups, motion principles, physical applications |
+| `uploads/06_Voz_de_Marca.pdf` | Communication modes, voice attributes, the full copy and editorial style guide |
+| `uploads/07_Templates_y_Aplicaciones.pdf` | Templates, campaigns, social, email, print and sales materials, reports |
+| `uploads/MetLife_primary_darkblue.png`, `MetLife_primary_white.png`, `MetLife_symbol_RGB.png` | Logos, copied to `assets/logos/` |
+| `uploads/SVG/` (328 files) | The **official category and product icon sets** — deduplicated and copied to `assets/icons/` |
+| `w3.metlife.cl` (read 28 Jul 2026) | The **live Chilean site**. Used for information architecture, product names and Chilean vocabulary **only** — see the rule below. Extracted to `guidelines/reference/site-structure.md` |
+| `uploads/IvyPresto-Text-{Light,Regular,SemiBold}.otf`, `Inter-Variable.ttf` | Webfonts, copied to `assets/fonts/` |
+| `uploads/fonts/` (24 files) | The wider Ivy superfamily. IvyPresto **Text Thin**, **Headline** and **Display** were taken; Ivy Journal and Ivy Ora are **different typefaces**, not MetLife's, and were left out. **The filenames in this batch are wrong** — see "What was actually supplied" below |
+
+Extracted page text is kept in `guidelines/reference/` so a reader without the PDFs can
+still trace any value back to its source.
+
+**No codebase, Figma file or live product URL was provided.** The UI kits are therefore
+brand-derived interpretations of the brand book's digital-application patterns, not
+recreations of live MetLife Chile screens. Each kit README repeats this.
+
+For web and digital, MetLife's own guidance points to the **Global Design System (GDS)**,
+with evolved-brand components rolling out through Q2 2026. This system is a stand-in for
+prototyping and brand work, not a replacement for GDS in production.
+
+## Index
+
+- `styles.css` — the single entry point consumers link (an `@import` list only)
+- `tokens/` — `fonts.css`, `colors.css`, `typography.css`, `layout.css`, `radii.css`, `effects.css`, `motion.css`, `base.css`
+- `components/` — `components.css` plus `core/`, `forms/`, `navigation/`, `feedback/`
+- `ui_kits/web/` — public site: home, product page, claim flow
+- `ui_kits/portal/` — Mi MetLife customer portal: summary, policy detail
+- `slides/` — seven 1280 × 720 slide types
+- `guidelines/` — specimen cards (Colors, Type, Layout, Brand, Icons) and `reference/` source text
+- `assets/` — `logos/`, `fonts/`, `icons/` (`category/`, `product/`, `icons.json`)
+- `SKILL.md` — Agent Skill wrapper
+- `thumbnail.html` — homepage tile
+
+### Components
+
+**Core** — `Button`, `IconButton`, `Icon`, `CategoryIcon`, `ProductIcon`, `Lockup`, `Card`, `MediaFrame`, `Badge`, `Tag`
+**Forms** — `Input`, `Textarea`, `Select`, `Checkbox`, `Radio`, `Switch`
+**Navigation** — `Tabs`, `Accordion`
+**Feedback** — `Dialog`, `Toast`, `Tooltip`
+
+Import from the bundle namespace: `const { Button, Card } = window.MetLifeChileDesignSystem_20b3eb`.
+
+#### Intentional additions
+
+The brand book is a brand manual, not a component library — it defines no component
+inventory (that lives in GDS, which was not supplied). The set above is the standard
+primitive set sized to the surfaces MetLife Chile runs. Four entries are brand-specific
+rather than generic, and each maps directly to a brand-book construct:
+
+- **CategoryIcon** / **ProductIcon** — thin wrappers over the official icon sets: an expressive glyph inside a solid disc, dark and light versions, 48px minimum.
+- **Lockup** — the Product (vertical bar) and Solution (12px-padded, 12px-radius tab) lockups from Brand Architecture.
+- **MediaFrame** — carries the four sanctioned treatments for type over photography, so no screen improvises an overlay.
+- **Icon** — a wrapper so nothing hand-rolls an SVG; see Iconography below for the substitution note.
+
+## Content fundamentals
+
+**Purpose:** *Always with you, building a more confident future.*
+**Promises:** Strength on your side · Move you forward · Guided by empathy · Commit and deliver.
+**Brand experience vision:** *The confidence of experience.*
+**Principles:** Assured · Attentive · Curated · Adaptive · Courageous.
+**Communication modes:** Discovery · Commit and sell · Use and engage · Educate · Resolve.
+The principles are constant; the mode sets the tone. In *Resolve* the same assured voice
+becomes "We understand this is important, and we're already working on the solution."
+In *Discovery* it becomes "Our solutions are built to endure and designed to meet you
+where you are."
+
+How the copy actually reads:
+
+- **Second person, first-person plural.** "We'll walk through this together, step-by-step." Never "the client" or "the insured" in customer-facing copy.
+- **Sentence case everywhere** — headlines, subheads, buttons, navigation. Initial caps only for proper and branded names (MetDental, MyBenefits, MetLife Accident Insurance); a shortened product name goes lower case.
+- **No period on a one-sentence headline or subhead.** Two or more sentences take periods throughout. Question and exclamation marks are allowed in one-sentence headlines, sparingly.
+- **Short, declarative sentences.** Confidence comes from brevity, not adjectives. No emoji, ever.
+- **Plain language over jargon.** Explain a term the first time it appears — a Tooltip is the sanctioned device.
+- **Flush left, ragged right. Never justified.** One space between sentences, not two.
+- **Em dash closed up** — "She was late—again—for the meeting." Hyphen, closed up, for numeric ranges: "10-15 minutes".
+- **No serial comma** in a simple series, unless leaving it out causes ambiguity.
+- **Double quotes in running text, single quotes in headlines**, subheads, chart titles and quotes within quotes. Periods and commas sit inside the quotes. Hang the open quote on display-size pull quotes.
+- **"and", not "&"**, except inside an approved branded name.
+- **Numerals:** spell out one through nine, figures from 10 up; figures for money and data; "1 million", not "one million"; a hyphen for ranges. "20 percent" in text, "20%" in charts and social.
+- **Dates and time:** months and days spelled out in full ("October 1, 2026"); lowercase "a.m." / "p.m." with a space, ":00" dropped ("6 p.m."); "noon" and "midnight" spelled out; two-letter time zones (ET, not EST).
+- **URLs** without `https://` or `www.` in display copy, no trailing slash; linked URLs carry the full prefix and are underlined in digital, bold in print.
+- **Footnote superscripts** go after a comma, period or semicolon, but before a dash or closing parenthesis.
+- **Disclaimers** are plain, factual, sentence case, ending in a period, set at 8–9pt in black or dark gray — never all caps.
+- **"MetLife" always carries both capitals** — capital M, capital L, no space. Not "Metlife", not
+  "METLIFE". The single exception is the domain `metlife.cl`, which is set all lowercase. This also
+  holds inside sub-brand lockups: "MetLife Orienta", "MetLife Seguros Online". Confirmed by the
+  client on 5 Aug 2026, after a production error repeated "Metlife Orienta" across an approved
+  eleven-poster series.
+- **Chilean Spanish** on local surfaces: *tú*, "denuncia tu siniestro", "reembolso", "carga", "UF", "Isapre", "Fonasa". The same editorial rules apply.
+
+## Visual foundations
+
+**Colour.** Blue 950 `#003652` (PMS 295C) and white are the foundation. Green 400 `#8FF5B1`
+(PMS 353C) is the emphasis colour, used in limited amounts to signal insight, innovation
+and action. Blue 200 `#CBF1FF` and Warm Gray 200 `#F5F2ED` are support and utility colours
+and carry most large tinted panels. The full blue, teal, green and warm-gray tint stacks
+exist for monotone charts and illustration nuance — limited use. The accent hues (yellow,
+orange, red, pink, violet) are for illustration and data visualisation only and are
+**never** a full-colour background: brand recall depends on it. Green 400 is likewise never
+a full-colour background in discovery moments, and level-100 tints are never a print
+background. Core black is `#2D2D2D`, never pure black. Type is always a solid colour —
+never a gradient. Green 400 on Blue 950 is the signature pairing; Blue 950 on any 500–100
+tint is the everyday one. On imagery, white is the default over dark photography and Blue
+950 over light photography, and Green 400 may sit over imagery when contrast allows.
+
+**Type.** IvyPresto Text for headlines, section titles and display moments — Regular is the
+foundation, Semibold for short headlines, in-headline emphasis, or when contrast from the
+background demands it. 120% line-height, −2% letter spacing, sentence case. Inter for
+subheads (Semibold or Medium), body (Regular), captions and eyebrows (Medium, uppercase,
++10% letter spacing) — 130% line-height, −2% letter spacing. Inter is never used at display
+size; IvyPresto is never used for body copy. **Italics:** IvyPresto has a true italic and it
+is meant to be used — pull quotes, editorial openers, publication and report titles — but
+never for functional emphasis, never at small headline sizes and never paired with heavier
+weights. Inter is never italicised; emphasis there comes from weight, size, colour and
+spacing. Fallbacks: Georgia for IvyPresto, Arial for Inter.
+
+### What was actually supplied
+
+Every `.otf` was parsed and checked against its internal `name` table rather than its filename,
+because **the filenames lie**. In both batches, every file named `Regular` (or `-.otf`) is the
+**Bold** cut, and the entire IvyPresto Display set is **italic**. `tokens/fonts.css` declares what
+is genuinely inside each file:
+
+| Family | Cuts actually present |
+| --- | --- |
+| IvyPresto **Text** | Thin 100, Light 300, SemiBold 600, Bold 700 — all upright, **no Regular, no italic** |
+| IvyPresto **Headline** | Thin 100, Light 300, SemiBold 600 upright; Bold 700 **italic only** |
+| IvyPresto **Display** | Thin, Light, SemiBold, Bold — **all four italic**, no upright cut exists |
+| Inter | Variable 100–900, upright |
+
+Two consequences, both load-bearing:
+
+1. **IvyPresto Text Regular — the brand book's foundation weight — does not exist in anything
+   supplied.** `--weight-display` is set to **300 (Light)**, the nearest available face, rather
+   than silently rendering headlines in Bold. Every headline in this system is therefore a
+   deliberate approximation. Send the real Regular and it becomes exact by changing one token.
+2. **The true italic the brand book calls for is IvyPresto Display**, which only exists italic.
+   `--font-display-italic` points at it, used with `font-style:italic` at display size — pull
+   quotes, editorial openers, publication titles. There is no italic for Text, so italics are a
+   display-scale device here and nothing smaller.
+
+`--font-display-xl` (IvyPresto Headline) is the larger optical size: only above roughly 60px, where
+Text's fit reads loose — a full-bleed slide title, a hero. Never below that, never for a section
+title, never mixed within one headline. Neither Headline nor Display is named by the brand book.
+
+**Layout.** Start from a basic 6 × 6 grid: the gutter is x and the margins are 2x — a 24px
+gutter means a 48px margin. Columns and rows flex with the asset; 12 columns is the
+flexible default because it divides into 1, 2, 3, 4, 6 or 12. Three sanctioned setups:
+1200 × 628 → 6 columns, 48px margins, 24px gutters; 2550 × 3300 → 12 columns, 120px margins,
+60px gutters; 8.5″ × 11″ print → 12 columns, 0.4″ margins, 0.2″ gutter, 0.125″ bleed.
+Generous white space is part of "curated" — crowding is off-brand. The web header is
+sticky; nothing else is fixed.
+
+**Backgrounds.** Flat colour fields (Warm Gray 100/200, Blue 200, Blue 950) and photography.
+No repeating patterns, no textures, no noise, no decorative gradients, no illustration
+wallpaper. Two background colours per deck or page, maximum.
+
+**Containers.** Two signature devices. The **Window M** crops or masks photography into the
+symbol's M-shaped window — a crop lets the subject break the boundary for depth; a mask
+mutes everything outside it. It needs the official Figma/Adobe template, so it is *not*
+reproduced in CSS here. The **rounded frame container** frames text, imagery and CTAs with a
+smaller, defined corner radius: 8px controls, 12px lockups and chips, 16px default frames,
+24px hero panels, 32px full-bleed panels. Never a stadium or pill shape. Frames also appear
+in asymmetrical arrangements — image frames offset against copy frames.
+
+**Cards.** Flat fill, 16px radius, no border by default; a Warm Gray 300 hairline when a card
+must separate from a same-tone background. Shadow is a digital affordance only —
+`--shadow-sm` at rest for interactive cards, `--shadow-md` plus a 2px lift on hover. Print
+and slide frames carry no shadow at all.
+
+**Borders.** 1px hairlines in Warm Gray 300/400. Thin vertical hairlines separate stat
+columns — a recurring pattern in reports and stat bands. Borders never carry colour as
+decoration; there are no coloured left-border accents in this brand.
+
+**Imagery.** Documentary, warm, natural light; real people in real environments, mid-action,
+looking at each other rather than the camera. Authentic, emotive, approachable, textured,
+optimistic. Not surreal, abstract, cold, impersonal, staged or generic. No heavy filters,
+no black and white, no grain. Text over an image uses one of four treatments and nothing
+else: a full dark overlay at 20–60% (black or a dark blue/teal) when text sits in the
+middle; a soft dark gradient at 30–70% when text sits to one side; the light equivalents
+(white at 60–80% full, 60–90% gradient); or a rounded corner container filled at 80–90%
+opacity with an optional backdrop blur when the image is too busy for any overlay. Smaller
+text needs more contrast. Unshot imagery is marked `FPO`.
+
+**Transparency and blur.** Sparingly, and only in digital: white at 6–12% for panels inside
+a Blue 950 section, the 80–90% container fill above, and a 3px backdrop blur on the modal
+scrim. No frosted-glass navigation.
+
+**Motion.** Three principles. *Connection* — transitions feel linked, so people understand
+how elements relate. *Intention* — every movement has a reason and directs focus.
+*Clarity* — motion simplifies and reinforces hierarchy, it never distracts. 140ms for state
+changes, 220ms for entrances, 360–600ms for reveals; `--ease-out` in, `--ease-in-out` for
+changes. Fades and short 8–16px translations only: no bounce, no overshoot, no spring, no
+parallax, no auto-playing carousels. Everything honours `prefers-reduced-motion`.
+
+**Interaction states.** Hover darkens rather than lightens: Blue 950 → Blue 900 → Blue 800
+on press; on the inverse scope Green 400 → Green 300 → Green 500. Secondary buttons fill
+with Warm Gray 200; ghost buttons underline. Press adds a 1px downward nudge, never a
+scale-down. Focus is a 2px Blue 700 outline at 2px offset, or the `--shadow-focus` ring on
+fields. Disabled is Warm Gray 600 on Warm Gray 300 — never a faded brand colour.
+
+## Iconography
+
+The brand book defines **two** icon systems and no icon font.
+
+1. **Functional icons** — simplified, linear glyphs that represent objects and, at small sizes, actions and navigation aid. Thin uniform stroke, rounded caps, 24px box, Blue 950 on light and white on dark.
+2. **Category icons** — more illustrative and expressive, conveying complex or conceptual ideas at larger sizes, always inside a solid disc. A dark version and a light version exist. Use the dark version on light backgrounds but **not** on Blue 950; use the light version on dark backgrounds but **not** on Warm Gray 400. Never alter their colours, never modify them, don't mix light and dark versions in one set unless you're deliberately highlighting one, and never go below **48px**.
+
+Beyond icons the brand uses **spot illustrations** (small, focused vignettes, often on
+circular backgrounds, clarifying a specific message) and **hero illustrations** (a single
+bespoke moment introducing a big idea). Both are commissioned through the brand team's
+icon-and-illustration request flow. None were supplied, so none are included and none were
+drawn. The hierarchy is: photography for human truth, hero illustration for big ideas,
+spot illustration to clarify a message, category icons for quick conceptual cues.
+
+### What ships here
+
+The **official category and product icon sets were supplied and are included**, in
+`assets/icons/`:
+
+- `assets/icons/category/` — **126 category icons**, each in both versions (`<name>-dark.svg`, `<name>-light.svg`). Three arrived light-only: `document-positive`, `submit`, `twodirections`.
+- `assets/icons/product/` — **27 product icons**, one per named offering, both versions each.
+- `assets/icons/icons.json` — the machine-readable name list.
+
+They are 128 × 128 SVGs with the disc baked in: the dark version is a Blue 950 disc with a
+white glyph, the light version a Warm Gray 400 disc with a Blue 950 glyph (some icons add
+Blue 600 `#47A3C8` as a secondary tone). Render them through `CategoryIcon` / `ProductIcon`,
+which enforce the 48px minimum. Set `window.ML_ICON_BASE` once per page to point at the folder.
+
+**One substitution remains:** the **functional** icon set was not supplied. `Icon` renders
+**Lucide** (`https://unpkg.com/lucide@0.469.0`), the closest public match on stroke weight and
+cap style. Swap that one wrapper's source when the official functional set arrives; category
+and product icons are unaffected.
+
+No icon was hand-drawn. Emoji are never used. Unicode characters are not used as icons; the
+only exception is `×` as a close affordance inside Tag and Toast.
+
+## Known gaps
+
+- **Window M** crop and mask: need the official Figma/Adobe template; not reproduced.
+- **Functional** icon set: not supplied — Lucide stands in. Category and product icons are the real thing.
+- **IvyPresto Text Regular is missing** — the single most consequential gap. Light 300 stands in for the brand's foundation headline weight. An upright IvyPresto Text Regular (and its italic) would make every headline in the system exact.
+- The **Portal de Clientes** sits behind a login and `metlifesegurosonline.cl` (the real purchase flow) was not read in depth, so the portal kit and the quote flow are still brand-derived rather than observed.
+- Spot and hero illustrations, brand photography: not supplied — `FPO` placeholders stand in for imagery.
+- Three category icons arrived light-only (`document-positive`, `submit`, `twodirections`); a fourth file, `categoryicon_document_positive-b19b2d31.svg`, was an Illustrator export whose stylesheet had been stripped, so its colours were undefined and it was discarded.
+- **Global lockups, co-branding ("+" construction) and hero-solution lockups** are documented in the brand book but are logo artwork, not UI, so only the Product and Solution lockups are built as a component.
+- The **Global Design System (GDS)** — MetLife's actual production component library for web — was not supplied. Nothing here should be treated as a GDS equivalent.
+- MetLife Chile specific material (local product names, Chilean regulatory copy, legal disclaimers) is not in the global brand book; the Spanish copy in the kits is illustrative.

@@ -1,8 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CLIENT_LIST } from '@/lib/constants';
+import { useTheme } from 'next-themes';
 
 /* ── Inline SVG icons ── */
 const Icons = {
@@ -43,7 +44,11 @@ const Icons = {
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [expandedClients, setExpandedClients] = useState({ metlife: true, provida: false });
+
+  useEffect(() => setMounted(true), []);
 
   const toggleClient = (clientId) => {
     setExpandedClients(prev => ({ ...prev, [clientId]: !prev[clientId] }));
@@ -79,9 +84,10 @@ export default function Sidebar() {
         <div className="sidebar-section-label" style={{ marginTop: 24 }}>Clientes</div>
 
         {CLIENT_LIST.map(client => (
-          <div key={client.id} className="sidebar-client-group">
+          <div key={client.id} className="sidebar-client-group" style={{ marginBottom: 32 }}>
             <button
               className={`sidebar-item sidebar-client-toggle ${isInPath(`/${client.id}`) ? 'active' : ''}`}
+              style={{ fontSize: '16px', fontWeight: 600, padding: '8px 12px' }}
               onClick={() => toggleClient(client.id)}
             >
               <div className="client-dot" style={{ background: client.color }} />
@@ -92,12 +98,13 @@ export default function Sidebar() {
             </button>
 
             {expandedClients[client.id] && (
-              <div className="sidebar-sub-items" style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <div className="sidebar-sub-items" style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '8px' }}>
                 {Object.entries(client.categories).map(([catKey, cat]) => (
                   <div key={catKey} style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                     <Link
                       href={`/${client.id}/${catKey}`}
                       className={`sidebar-sub-item ${isActive(`/${client.id}/${catKey}`) ? 'active' : ''}`}
+                      style={{ paddingLeft: '38px', fontSize: '14px', marginBottom: '2px' }}
                     >
                       {catKey === 'diseno' ? Icons.design : Icons.content}
                       <span>{cat.label}</span>
@@ -110,8 +117,8 @@ export default function Sidebar() {
                         key={tool.id}
                         href={`/${client.id}/${catKey}/${tool.id}`}
                         className={`sidebar-tool-item ${isActive(`/${client.id}/${catKey}/${tool.id}`) ? 'active' : ''}`}
+                        style={{ paddingLeft: '64px', fontSize: '13px' }}
                       >
-                        <span className="tool-dot" />
                         <span>{tool.name}</span>
                       </Link>
                     ))}
@@ -125,7 +132,31 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="sidebar-footer">
-        <button className="sidebar-item">
+        <button 
+          className="sidebar-item"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        >
+          {mounted && theme === 'light' ? (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          ) : (
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          )}
+          <span>{mounted && theme === 'light' ? 'Modo Oscuro' : 'Modo Claro'}</span>
+        </button>
+
+        <button className="sidebar-item" style={{ marginTop: 4 }}>
           {Icons.settings}
           <span>Configuración</span>
         </button>
@@ -140,6 +171,7 @@ export default function Sidebar() {
           height: 100vh;
           background: var(--bg-sidebar);
           border-right: 1px solid var(--border);
+          box-shadow: 4px 0 24px rgba(0,0,0,0.02);
           display: flex;
           flex-direction: column;
           z-index: 50;
@@ -202,13 +234,19 @@ export default function Sidebar() {
           font-family: var(--font-sans);
           text-align: left;
         }
+        .sidebar-client-toggle {
+          font-size: 16px;
+          font-weight: 600;
+          padding: 8px 12px;
+        }
         .sidebar-item:hover {
           color: var(--text-primary);
-          background: rgba(255,255,255,0.04);
+          background: var(--bg-card-hover);
         }
         .sidebar-item.active {
-          color: var(--accent);
-          background: var(--accent-soft);
+          color: #ffffff;
+          background: var(--accent);
+          box-shadow: 0 4px 15px var(--accent-glow);
         }
 
         .client-dot {
@@ -229,27 +267,28 @@ export default function Sidebar() {
         }
 
         .sidebar-sub-items {
-          padding-left: 8px;
-          margin-top: 2px;
+          padding-left: 0;
         }
 
         .sidebar-sub-item {
           display: flex;
           align-items: center;
           gap: 9px;
-          padding: 7px 12px;
+          padding: 7px 12px 7px 32px;
           border-radius: var(--radius-sm);
-          font-size: 13px;
+          font-size: 14px;
           color: var(--text-muted);
           transition: all var(--transition-fast);
           text-decoration: none;
         }
         .sidebar-sub-item:hover {
           color: var(--text-secondary);
-          background: rgba(255,255,255,0.03);
+          background: var(--bg-card-hover);
         }
         .sidebar-sub-item.active {
           color: var(--accent);
+          font-weight: 500;
+          background: var(--accent-soft);
         }
 
         .sidebar-count {
@@ -266,7 +305,7 @@ export default function Sidebar() {
           display: flex;
           align-items: center;
           gap: 8px;
-          padding: 6px 12px 6px 36px;
+          padding: 6px 12px 6px 57px;
           border-radius: var(--radius-sm);
           font-size: 12.5px;
           color: var(--text-muted);
@@ -275,6 +314,7 @@ export default function Sidebar() {
         }
         .sidebar-tool-item:hover {
           color: var(--text-secondary);
+          background: var(--bg-card-hover);
         }
         .sidebar-tool-item.active {
           color: var(--accent);

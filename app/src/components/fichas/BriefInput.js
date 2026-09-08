@@ -1,156 +1,279 @@
 'use client';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
-const FICHA_TYPES = [
-  { id: 'clinica', label: 'Ficha de Clínica' },
-  { id: 'comercial', label: 'Ficha Comercial' },
-  { id: 'tecnica', label: 'Ficha Técnica' },
-];
+export default function BriefInput({ onGenerate, isLoading, fichaData, setFichaData, onRestart }) {
+  const [step, setStep] = useState(1);
+  const [briefFile, setBriefFile] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
+  const [logoFile, setLogoFile] = useState(null);
+  const [fichaTitle, setFichaTitle] = useState('');
+  const [fichaTitle2, setFichaTitle2] = useState('');
+  
+  const briefRef = useRef(null);
+  const photoRef = useRef(null);
+  const logoRef = useRef(null);
 
-export default function BriefInput({ onGenerate, isLoading }) {
-  const [fichaType, setFichaType] = useState('clinica');
-  const [productName, setProductName] = useState('');
-  const [clinicName, setClinicName] = useState('');
-  const [briefText, setBriefText] = useState('');
-  const [file, setFile] = useState(null);
-  const fileRef = useRef(null);
+  const [photoX, setPhotoX] = useState(50);
+  const [photoY, setPhotoY] = useState(50);
+  const [photoZoom, setPhotoZoom] = useState(1);
+
+  useEffect(() => {
+    if (fichaData) {
+      if (fichaData.photoPosition) {
+        const parts = String(fichaData.photoPosition).split(' ');
+        if (parts.length === 2) {
+          setPhotoX(parseInt(parts[0]) || 50);
+          setPhotoY(parseInt(parts[1]) || 50);
+        }
+      }
+      if (fichaData.photoZoom) {
+        setPhotoZoom(parseFloat(fichaData.photoZoom) || 1);
+      }
+    }
+  }, [fichaData]);
+
+  const handlePhotoChange = (key, value) => {
+    if (key === 'x') {
+      setPhotoX(value);
+      setFichaData({ ...fichaData, photoPosition: `${value}% ${photoY}%` });
+    } else if (key === 'y') {
+      setPhotoY(value);
+      setFichaData({ ...fichaData, photoPosition: `${photoX}% ${value}%` });
+    } else if (key === 'zoom') {
+      setPhotoZoom(value);
+      setFichaData({ ...fichaData, photoZoom: value });
+    }
+  };
+
+  const handleNextStep = () => {
+    setStep(prev => prev + 1);
+  };
 
   const handleSubmit = () => {
-    if (!briefText.trim() && !file) return;
+    if (!briefFile || !fichaTitle.trim()) return;
+    
+    // Combine titles into array if subtitle is provided
+    const titleData = fichaTitle2.trim() ? [fichaTitle.trim(), fichaTitle2.trim()] : fichaTitle.trim();
+    
     onGenerate({
-      fichaType,
-      productName,
-      clinicName,
-      briefText,
-      file,
+      briefFile,
+      photoFile,
+      logoFile,
+      title: titleData
     });
   };
 
-  const handleFileDrop = (e) => {
+  const createDropHandler = (setter, autoNext = true) => (e) => {
     e.preventDefault();
     const f = e.dataTransfer?.files?.[0] || e.target?.files?.[0];
-    if (f) setFile(f);
+    if (f) {
+      setter(f);
+      if (autoNext) setTimeout(handleNextStep, 400);
+    }
   };
 
+  const renderDropzone = (label, hint, accept, file, setter, inputRef, isActive) => {
+    if (!isActive && !file) return null;
+
+    return (
+      <div className={`field ${isActive ? 'field-active' : 'field-completed'}`}>
+        <label className="field-label">{label}</label>
+        
+        <div 
+          className={`generic-dropzone ${file ? 'has-file' : ''}`}
+          onDrop={createDropHandler(setter, !file)}
+          onDragOver={e => e.preventDefault()}
+        >
+          <input
+            ref={inputRef}
+            type="file"
+            style={{ display: 'none' }}
+            accept={accept}
+            onChange={createDropHandler(setter, !file)}
+          />
+          
+          {file ? (
+            <div className="file-selected">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="16 13 12 17 8 13"/>
+              </svg>
+              <span className="file-name">{file.name}</span>
+              <button 
+                className="file-remove" 
+                onClick={(e) => { 
+                  e.stopPropagation(); 
+                  setter(null); 
+                  if (isActive) setStep(Math.max(1, step - 1));
+                }}>
+                ✕
+              </button>
+            </div>
+          ) : (
+            <div className="generic-dropzone-content">
+              <div className="generic-dropzone-icon">
+                <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#8E9BB0" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+                  <path d="M12 15V9"/>
+                  <path d="m9 12 3-3 3 3"/>
+                </svg>
+              </div>
+              <p className="generic-dropzone-title">Drag&Drop files here</p>
+              <p className="generic-dropzone-or">or</p>
+              <button className="generic-dropzone-btn" onClick={() => inputRef.current?.click()}>
+                Browse Files
+              </button>
+              {hint && <p className="generic-dropzone-hint">{hint}</p>}
+            </div>
+          )}
+        </div>
+        
+        {!file && isActive && (
+          <button className="btn-skip" onClick={handleNextStep}>Omitir paso</button>
+        )}
+      </div>
+    );
+  };
+
+  // --- EDIT MODE (Post Generation) ---
+  if (fichaData) {
+    return (
+      <div className="edit-panel">
+        <div className="edit-header">
+          <h3 className="edit-title">Ajustes de Ficha</h3>
+          <p className="edit-subtitle">Edita los textos haciendo clic directamente en la vista previa. Usa los controles abajo para encuadrar la imagen.</p>
+        </div>
+
+        <div className="edit-section">
+          <h4>Encuadre de Fotografía</h4>
+          <div className="slider-group">
+            <label>Posición Horizontal (X)</label>
+            <div className="slider-row">
+              <input type="range" min="0" max="100" value={photoX} onChange={(e) => handlePhotoChange('x', parseInt(e.target.value))} />
+              <span>{photoX}%</span>
+            </div>
+          </div>
+          <div className="slider-group">
+            <label>Posición Vertical (Y)</label>
+            <div className="slider-row">
+              <input type="range" min="0" max="100" value={photoY} onChange={(e) => handlePhotoChange('y', parseInt(e.target.value))} />
+              <span>{photoY}%</span>
+            </div>
+          </div>
+          <div className="slider-group">
+            <label>Zoom</label>
+            <div className="slider-row">
+              <input type="range" min="1" max="3" step="0.1" value={photoZoom} onChange={(e) => handlePhotoChange('zoom', parseFloat(e.target.value))} />
+              <span>{photoZoom}x</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="edit-actions">
+          <button className="btn btn-danger btn-restart" onClick={onRestart}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+            Comenzar de nuevo
+          </button>
+        </div>
+
+        <style jsx>{`
+          .edit-panel { display: flex; flex-direction: column; height: 100%; }
+          .edit-header { margin-bottom: 24px; }
+          .edit-title { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+          .edit-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+          .edit-section { padding: 20px; background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border); }
+          .edit-section h4 { margin: 0 0 16px 0; font-size: 14px; color: var(--text-secondary); }
+          .slider-group { margin-bottom: 16px; }
+          .slider-group:last-child { margin-bottom: 0; }
+          .slider-group label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+          .slider-row { display: flex; align-items: center; gap: 12px; }
+          .slider-row input[type="range"] { flex: 1; accent-color: var(--accent); }
+          .slider-row span { font-size: 12px; font-variant-numeric: tabular-nums; width: 36px; text-align: right; color: var(--text-primary); font-weight: 500; }
+          .edit-actions { margin-top: auto; padding-top: 24px; }
+          .btn-restart { width: 100%; justify-content: center; padding: 12px; font-size: 14px; background: var(--error-soft); color: var(--error); border: 1px solid transparent; cursor: pointer; border-radius: var(--radius-md); display: flex; align-items: center; gap: 8px;}
+          .btn-restart:hover { background: var(--error); color: white; }
+        `}</style>
+      </div>
+    );
+  }
+
+  // --- UPLOAD MODE (Stepper) ---
   return (
     <div className="brief-input">
       <div className="brief-header">
-        <h3 className="brief-title">Brief de contenido</h3>
-        <p className="brief-subtitle">Ingresa el contenido para generar la ficha</p>
+        <h3 className="brief-title">Generar nueva ficha</h3>
+        <p className="brief-subtitle">Completa los pasos para generar el documento.</p>
+      </div>
+
+      <div className="stepper-indicator">
+        <div className={`step-dot ${step >= 1 ? 'active' : ''}`} />
+        <div className={`step-line ${step >= 2 ? 'active' : ''}`} />
+        <div className={`step-dot ${step >= 2 ? 'active' : ''}`} />
+        <div className={`step-line ${step >= 3 ? 'active' : ''}`} />
+        <div className={`step-dot ${step >= 3 ? 'active' : ''}`} />
+        <div className={`step-line ${step >= 4 ? 'active' : ''}`} />
+        <div className={`step-dot ${step >= 4 ? 'active' : ''}`} />
       </div>
 
       <div className="brief-form">
-        {/* Tipo de ficha */}
-        <div className="field">
-          <label className="field-label">Tipo de ficha</label>
-          <div className="field-pills">
-            {FICHA_TYPES.map(t => (
-              <button
-                key={t.id}
-                className={`pill ${fichaType === t.id ? 'active' : ''}`}
-                onClick={() => setFichaType(t.id)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </div>
+        {step >= 1 && renderDropzone('Paso 1: Brief de contenido (Requerido)', '', '.docx', briefFile, setBriefFile, briefRef, step === 1)}
+        {step >= 2 && renderDropzone('Paso 2: Foto del Header (Opcional)', '', 'image/*', photoFile, setPhotoFile, photoRef, step === 2)}
+        {step >= 3 && renderDropzone('Paso 3: Logo del Partner (Opcional)', '', 'image/*', logoFile, setLogoFile, logoRef, step === 3)}
 
-        {/* Producto */}
-        <div className="field">
-          <label className="field-label">Nombre del producto</label>
-          <input
-            type="text"
-            className="field-input"
-            placeholder="Ej: Seguro Catastrófico Interclínica"
-            value={productName}
-            onChange={e => setProductName(e.target.value)}
-          />
-        </div>
-
-        {/* Clínica */}
-        <div className="field">
-          <label className="field-label">Clínica / Partner</label>
-          <input
-            type="text"
-            className="field-input"
-            placeholder="Ej: Interclínica"
-            value={clinicName}
-            onChange={e => setClinicName(e.target.value)}
-          />
-        </div>
-
-        {/* Brief text */}
-        <div className="field">
-          <label className="field-label">Contenido del brief</label>
-          <textarea
-            className="field-textarea"
-            rows={10}
-            placeholder="Pega aquí el contenido del brief: títulos, datos clave, tablas, legales, condiciones generales..."
-            value={briefText}
-            onChange={e => setBriefText(e.target.value)}
-          />
-        </div>
-
-        {/* File upload */}
-        <div className="field">
-          <label className="field-label">O sube un archivo</label>
-          <div
-            className="file-drop"
-            onDrop={handleFileDrop}
-            onDragOver={e => e.preventDefault()}
-            onClick={() => fileRef.current?.click()}
-          >
-            <input
-              ref={fileRef}
-              type="file"
-              style={{ display: 'none' }}
-              accept=".doc,.docx,.pdf,.txt,.xlsx"
-              onChange={handleFileDrop}
+        {step >= 4 && (
+          <div className={`field ${step === 4 ? 'field-active' : 'field-completed'}`}>
+            <label className="field-label">Paso 4: Títulos de la Ficha</label>
+            <input 
+              type="text" 
+              className="text-input" 
+              placeholder="Línea 1 (Ej. Seguro de Vida)" 
+              value={fichaTitle}
+              onChange={(e) => setFichaTitle(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && fichaTitle.trim() && document.getElementById('title2-input')?.focus()}
+              autoFocus
             />
-            {file ? (
-              <div className="file-selected">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><polyline points="16 13 12 17 8 13"/>
-                </svg>
-                <span>{file.name}</span>
-                <button className="file-remove" onClick={(e) => { e.stopPropagation(); setFile(null); }}>✕</button>
-              </div>
-            ) : (
-              <>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                </svg>
-                <span className="file-drop-text">Arrastra un archivo o haz clic</span>
-                <span className="file-drop-hint">Word, PDF, Excel o texto</span>
-              </>
+            <input 
+              id="title2-input"
+              type="text" 
+              className="text-input mt-2" 
+              placeholder="Línea 2 / Subtítulo (Opcional)" 
+              value={fichaTitle2}
+              onChange={(e) => setFichaTitle2(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && fichaTitle.trim() && setStep(5)}
+            />
+            {step === 4 && fichaTitle.trim() && (
+              <button className="btn btn-secondary mt-2" onClick={() => setStep(5)} style={{ alignSelf: 'flex-start' }}>Continuar</button>
             )}
           </div>
-        </div>
+        )}
 
-        {/* Submit */}
-        <button
-          className="btn btn-primary generate-btn"
-          onClick={handleSubmit}
-          disabled={isLoading || (!briefText.trim() && !file)}
-        >
-          {isLoading ? (
-            <>
-              <span className="spinner" />
-              Generando ficha...
-            </>
-          ) : (
-            <>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-              </svg>
-              Generar con IA
-            </>
-          )}
-        </button>
+        {step >= 5 && (
+          <div className="generate-wrapper">
+            <button
+              className="btn btn-primary generate-btn"
+              onClick={handleSubmit}
+              disabled={isLoading || !briefFile || !fichaTitle.trim()}
+            >
+              {isLoading ? (
+                <>
+                  <span className="spinner" />
+                  Generando ficha...
+                </>
+              ) : (
+                <>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                  Generar con IA
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
         .brief-input {
           height: 100%;
           display: flex;
@@ -158,10 +281,10 @@ export default function BriefInput({ onGenerate, isLoading }) {
           overflow-y: auto;
         }
         .brief-header {
-          margin-bottom: 24px;
+          margin-bottom: 20px;
         }
         .brief-title {
-          font-size: 16px;
+          font-size: 18px;
           font-weight: 600;
           color: var(--text-primary);
         }
@@ -170,15 +293,49 @@ export default function BriefInput({ onGenerate, isLoading }) {
           color: var(--text-muted);
           margin-top: 4px;
         }
+        
+        .stepper-indicator {
+          display: flex;
+          align-items: center;
+          margin-bottom: 24px;
+          padding: 0 8px;
+        }
+        .step-dot {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          background: var(--surface-200);
+          border: 2px solid var(--border);
+          flex-shrink: 0;
+          transition: all 0.3s;
+        }
+        .step-dot.active {
+          background: var(--accent);
+          border-color: var(--accent);
+        }
+        .step-line {
+          flex: 1;
+          height: 2px;
+          background: var(--border);
+          transition: all 0.3s;
+        }
+        .step-line.active {
+          background: var(--accent);
+        }
+
         .brief-form {
           display: flex;
           flex-direction: column;
-          gap: 18px;
+          gap: 16px;
         }
         .field {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 8px;
+          transition: all 0.3s;
+        }
+        .field-completed {
+          opacity: 0.6;
         }
         .field-label {
           font-size: 12px;
@@ -187,106 +344,127 @@ export default function BriefInput({ onGenerate, isLoading }) {
           text-transform: uppercase;
           letter-spacing: 0.04em;
         }
-        .field-input {
-          padding: 10px 14px;
-          background: var(--bg-input);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-md);
-          color: var(--text-primary);
-          font-size: 14px;
-          font-family: var(--font-sans);
-          outline: none;
-          transition: border-color var(--transition-fast);
-        }
-        .field-input:focus {
-          border-color: var(--accent);
-          box-shadow: 0 0 0 2px var(--accent-glow);
-        }
-        .field-textarea {
-          padding: 12px 14px;
-          background: var(--bg-input);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-md);
-          color: var(--text-primary);
-          font-size: 13px;
-          font-family: var(--font-sans);
-          line-height: 1.6;
-          resize: vertical;
-          outline: none;
-          transition: border-color var(--transition-fast);
-          min-height: 180px;
-        }
-        .field-textarea:focus {
-          border-color: var(--accent);
-          box-shadow: 0 0 0 2px var(--accent-glow);
-        }
-        .field-pills {
-          display: flex;
-          gap: 6px;
-        }
-        .pill {
-          padding: 7px 14px;
-          border-radius: var(--radius-full);
-          font-size: 13px;
-          font-weight: 500;
-          font-family: var(--font-sans);
-          border: 1px solid var(--border);
-          background: var(--bg-input);
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: all var(--transition-fast);
-        }
-        .pill:hover {
-          border-color: var(--border-hover);
-          color: var(--text-primary);
-        }
-        .pill.active {
-          background: var(--accent);
-          border-color: var(--accent);
-          color: #fff;
-        }
-
-        .file-drop {
-          border: 2px dashed var(--border);
-          border-radius: var(--radius-md);
-          padding: 24px;
+        
+        /* EXACT match to user's drag&drop reference image */
+        .generic-dropzone {
+          border: 2px dashed #C3C8D4;
+          border-radius: 6px;
+          background: #F8FAFC;
+          padding: 32px 16px;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 8px;
-          cursor: pointer;
-          transition: all var(--transition-fast);
+          justify-content: center;
+          transition: all 0.2s;
         }
-        .file-drop:hover {
-          border-color: var(--accent);
-          background: var(--accent-soft);
+        .generic-dropzone.has-file {
+          border-style: solid;
+          border-color: var(--border);
+          padding: 16px;
+          background: var(--bg-input);
         }
-        .file-drop-text {
+        .field-active .generic-dropzone:not(.has-file) {
+          background: #ffffff;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+        
+        .generic-dropzone-content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .generic-dropzone-icon {
+          margin-bottom: 12px;
+        }
+        .generic-dropzone-title {
+          font-size: 16px;
+          color: #64748B;
+          font-weight: 500;
+          margin: 0 0 8px 0;
+        }
+        .generic-dropzone-or {
           font-size: 13px;
-          color: var(--text-secondary);
+          color: #94A3B8;
+          margin: 0 0 16px 0;
         }
-        .file-drop-hint {
-          font-size: 11px;
-          color: var(--text-muted);
+        .generic-dropzone-btn {
+          border: 1px solid #3B82F6;
+          color: #3B82F6;
+          background: transparent;
+          border-radius: 4px;
+          padding: 8px 24px;
+          font-size: 14px;
+          font-weight: 500;
+          cursor: pointer;
+          transition: all 0.2s;
         }
+        .generic-dropzone-btn:hover {
+          background: #EFF6FF;
+        }
+        .generic-dropzone-hint {
+          font-size: 12px;
+          color: #94A3B8;
+          margin-top: 12px;
+        }
+
         .file-selected {
           display: flex;
           align-items: center;
           gap: 8px;
           font-size: 13px;
-          color: var(--success);
+          color: var(--text-primary);
           font-weight: 500;
+          width: 100%;
+        }
+        .file-name {
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
         .file-remove {
-          margin-left: 8px;
           color: var(--text-muted);
           font-size: 14px;
           cursor: pointer;
+          background: var(--surface-100);
+          border: none;
+          border-radius: 4px;
+          padding: 4px 8px;
+        }
+        .file-remove:hover { color: var(--error); background: var(--error-soft); }
+
+        .btn-skip {
+          align-self: flex-start;
           background: none;
           border: none;
-          font-family: var(--font-sans);
+          color: var(--text-muted);
+          font-size: 12px;
+          cursor: pointer;
+          padding: 4px 0;
+          text-decoration: underline;
         }
-        .file-remove:hover { color: var(--error); }
+        .btn-skip:hover { color: var(--text-primary); }
+
+        .text-input {
+          padding: 12px;
+          border-radius: var(--radius-sm);
+          border: 1px solid var(--border);
+          background: var(--bg-input);
+          color: var(--text-primary);
+          font-size: 14px;
+          outline: none;
+        }
+        .text-input:focus {
+          border-color: var(--accent);
+          box-shadow: 0 0 0 2px var(--accent-soft);
+        }
+
+        .generate-wrapper {
+          margin-top: 16px;
+          padding-top: 16px;
+          border-top: 1px solid var(--border);
+        }
 
         .generate-btn {
           width: 100%;
@@ -294,7 +472,6 @@ export default function BriefInput({ onGenerate, isLoading }) {
           padding: 14px;
           font-size: 15px;
           font-weight: 600;
-          margin-top: 8px;
         }
         .generate-btn:disabled {
           opacity: 0.5;
@@ -312,6 +489,7 @@ export default function BriefInput({ onGenerate, isLoading }) {
           border-radius: 50%;
           animation: spin 0.8s linear infinite;
         }
+        .mt-2 { margin-top: 8px; }
       `}</style>
     </div>
   );

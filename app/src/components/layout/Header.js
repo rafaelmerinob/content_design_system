@@ -61,8 +61,8 @@ export default function Header() {
           align-items: center;
           justify-content: space-between;
           padding: 0 32px;
-          border-bottom: 1px solid var(--border);
-          background: rgba(10, 14, 26, 0.7);
+          border-bottom: none;
+          background: transparent;
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           position: sticky;

@@ -2,27 +2,30 @@
 import { useState } from 'react';
 import BriefInput from '@/components/fichas/BriefInput';
 import FichaPreview from '@/components/fichas/FichaPreview';
+import FichaRepository from '@/components/fichas/FichaRepository';
 import { supabase } from '@/lib/supabase';
 
 export default function FichaWorkspace() {
   const [fichaData, setFichaData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('create'); // 'create' | 'repo'
 
-  const handleGenerate = async (brief) => {
+  const handleGenerate = async (files) => {
     setIsLoading(true);
     setError(null);
 
     try {
+      const formData = new FormData();
+      if (files.briefFile) formData.append('briefFile', files.briefFile);
+      if (files.photoFile) formData.append('photoFile', files.photoFile);
+      if (files.logoFile) formData.append('logoFile', files.logoFile);
+      if (files.title) formData.append('title', JSON.stringify(files.title));
+      formData.append('fichaType', 'clinica');
+
       const res = await fetch('/api/claude', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          brief: brief.briefText,
-          productName: brief.productName,
-          clinicName: brief.clinicName,
-          fichaType: brief.fichaType,
-        }),
+        body: formData,
       });
 
       if (!res.ok) {
@@ -36,20 +39,24 @@ export default function FichaWorkspace() {
       // Guardar en Supabase de forma asíncrona sin bloquear la UI
       supabase.from('fichas').insert({
         client_id: 'metlife',
-        product_name: brief.productName,
-        clinic_name: brief.clinicName,
-        ficha_type: brief.fichaType,
-        brief_content: brief.briefText,
+        product_name: data.ficha.title || 'Ficha sin título',
+        clinic_name: data.ficha.partnerName || 'Clínica',
+        ficha_type: 'clinica',
+        brief_content: 'Contenido extraído del Word',
         generated_data: data.ficha,
-      }).catch(err => console.error('Error saving ficha:', err));
+      }).then(({ error }) => {
+        if (error) console.error('Error saving ficha:', error);
+      });
 
       supabase.from('activity_log').insert({
         action: 'Ficha generada',
-        detail: `${brief.productName || 'Ficha sin título'} · ${brief.clinicName || 'MetLife'}`,
+        detail: `${data.ficha.title || 'Ficha sin título'} · ${data.ficha.partnerName || 'MetLife'}`,
         client_id: 'metlife',
         tool_id: 'fichas-clinicas',
         status: 'success'
-      }).catch(err => console.error('Error saving log:', err));
+      }).then(({ error }) => {
+        if (error) console.error('Error saving log:', error);
+      });
 
     } catch (err) {
       setError(err.message);
@@ -115,53 +122,130 @@ export default function FichaWorkspace() {
     });
   };
 
+  const handleRestart = () => {
+    setFichaData(null);
+    setError(null);
+    setActiveTab('create');
+  };
+
+  const handleSelectFicha = (data) => {
+    setFichaData(data);
+    setActiveTab('create'); // Switch to editor view
+  };
+
   return (
-    <div className="workspace">
-      <div className="workspace-panel workspace-left">
-        <BriefInput onGenerate={handleGenerate} isLoading={isLoading} />
-
-        {error && (
-          <div className="workspace-error">
-            <strong>Error:</strong> {error}
-          </div>
-        )}
-
-        {/* Demo button for testing */}
-        <button
-          className="btn btn-secondary"
-          style={{ marginTop: 12, width: '100%', justifyContent: 'center', fontSize: 13 }}
-          onClick={handleDemoLoad}
+    <div className="workspace-container">
+      <div className="workspace-tabs">
+        <button 
+          className={`workspace-tab ${activeTab === 'create' ? 'active' : ''}`}
+          onClick={() => setActiveTab('create')}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <polygon points="5 3 19 12 5 21 5 3"/>
-          </svg>
-          Cargar demo (Seguro Catastrófico)
+          Generar Nueva
+        </button>
+        <button 
+          className={`workspace-tab ${activeTab === 'repo' ? 'active' : ''}`}
+          onClick={() => setActiveTab('repo')}
+        >
+          Repositorio
         </button>
       </div>
 
-      <div className="workspace-panel workspace-right">
-        <FichaPreview fichaData={fichaData} />
-      </div>
+      {activeTab === 'repo' ? (
+        <div className="workspace-repo-view">
+          <FichaRepository onSelectFicha={handleSelectFicha} />
+        </div>
+      ) : (
+        <div className="workspace">
+          <div className="workspace-panel workspace-left">
+            <BriefInput 
+              onGenerate={handleGenerate} 
+              isLoading={isLoading} 
+              fichaData={fichaData}
+              setFichaData={setFichaData}
+              onRestart={handleRestart}
+            />
+
+            {error && (
+              <div className="workspace-error">
+                <strong>Error:</strong> {error}
+              </div>
+            )}
+
+            {/* Demo button for testing (only show if not generated) */}
+            {!fichaData && (
+              <button
+                className="btn btn-secondary"
+                style={{ marginTop: 12, width: '100%', justifyContent: 'center', fontSize: 13 }}
+                onClick={handleDemoLoad}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                Cargar demo (Seguro Catastrófico)
+              </button>
+            )}
+          </div>
+
+          <div className="workspace-panel workspace-right">
+            <FichaPreview fichaData={fichaData} setFichaData={setFichaData} />
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
+        .workspace-container {
+          display: flex;
+          flex-direction: column;
+          height: calc(100vh - 240px);
+          margin-top: 10px;
+        }
+        .workspace-tabs {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 16px;
+        }
+        .workspace-tab {
+          padding: 8px 16px;
+          border-radius: var(--radius-md);
+          font-size: 14px;
+          font-weight: 500;
+          color: var(--text-secondary);
+          background: transparent;
+          border: 1px solid transparent;
+          cursor: pointer;
+          transition: all var(--transition-fast);
+        }
+        .workspace-tab:hover {
+          color: var(--text-primary);
+          background: var(--bg-card);
+        }
+        .workspace-tab.active {
+          color: var(--accent);
+          background: var(--bg-card);
+          border-color: var(--border);
+          box-shadow: var(--shadow-sm);
+        }
+        .workspace-repo-view {
+          flex: 1;
+          height: calc(100% - 50px);
+        }
         .workspace {
           display: grid;
           grid-template-columns: 420px 1fr;
-          gap: 0;
-          height: calc(100vh - var(--header-height) - 56px);
-          margin: -28px -32px;
-          border-top: 1px solid var(--border);
+          gap: 24px;
+          height: calc(100% - 50px);
         }
         .workspace-panel {
           overflow-y: auto;
+          background: var(--bg-card);
+          border-radius: var(--radius-xl);
+          box-shadow: var(--shadow-md);
         }
         .workspace-left {
           padding: 24px;
-          border-right: 1px solid var(--border);
-          background: var(--bg-secondary);
         }
         .workspace-right {
-          background: var(--bg-card);
+          position: relative;
         }
         .workspace-error {
           margin-top: 12px;
