@@ -62,9 +62,22 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="sidebar-logo">
         <div className="sidebar-logo-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect width="24" height="24" rx="6" fill="var(--accent)"/>
-            <path d="M7 8h10M7 12h6M7 16h8" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+          <svg width="28" height="28" viewBox="0 0 1128 1098" fill="none">
+            <style>{`
+              .cls-1, .cls-2, .cls-3 { fill: currentColor; font-family: NeuePower-Ultra, 'Neue Power'; font-size: 149.14px; }
+              .cls-4 { fill: none; stroke: currentColor; stroke-miterlimit: 10; stroke-width: 5.18px; }
+              .cls-2 { letter-spacing: -.1em; }
+              .cls-5 { letter-spacing: .27em; }
+              .cls-6 { letter-spacing: .15em; }
+              .cls-3 { letter-spacing: -.02em; }
+              .cls-7 { letter-spacing: -.1em; }
+              .cls-8 { letter-spacing: -.08em; }
+            `}</style>
+            <text className="cls-1" transform="translate(369.31 462.83) scale(.86 1)"><tspan className="cls-6"><tspan x="0" y="0">CON</tspan></tspan><tspan className="cls-5"><tspan x="0" y="160.18">TEN</tspan></tspan><tspan x="0" y="320.36">T</tspan></text>
+            <text className="cls-3" transform="translate(459.4 783.19) scale(1.26 1)"><tspan x="0" y="0"> </tspan></text>
+            <text className="cls-2" transform="translate(492.41 783.19) scale(.69 1)"><tspan x="0" y="0">3</tspan></text>
+            <text className="cls-1" transform="translate(551.37 783.19) scale(.8 1)"><tspan className="cls-7" x="0" y="0">6</tspan><tspan className="cls-8" x="88.42" y="0">0</tspan></text>
+            <path className="cls-4" d="M1082.17,516.56c24.2-273.53-221.54-458.85-482.39-468.53-200.28-7.43-390.96,89.6-485.09,268.1-77.36,146.69-95.26,331.98-32.67,487.19,25.34,62.84,61.16,106.96,112.46,151.43,295.62,256.27,807.97-47.91,878.74-378.83,4.22-19.73,7.2-39.56,8.95-59.36Z"/>
           </svg>
         </div>
         <div>

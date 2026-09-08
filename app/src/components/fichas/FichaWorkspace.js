@@ -5,6 +5,8 @@ import FichaPreview from '@/components/fichas/FichaPreview';
 import FichaRepository from '@/components/fichas/FichaRepository';
 import { supabase } from '@/lib/supabase';
 
+import { generateFichaAction } from '../../app/actions/generateFicha';
+
 export default function FichaWorkspace() {
   const [fichaData, setFichaData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,17 +25,13 @@ export default function FichaWorkspace() {
       if (files.title) formData.append('title', JSON.stringify(files.title));
       formData.append('fichaType', 'clinica');
 
-      const res = await fetch('/api/claude', {
-        method: 'POST',
-        body: formData,
-      });
+      const result = await generateFichaAction(formData);
 
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || `Error ${res.status}`);
+      if (result.error) {
+        throw new Error(result.error);
       }
 
-      const data = await res.json();
+      const data = result;
       setFichaData(data.ficha);
 
       // Guardar en Supabase de forma asíncrona sin bloquear la UI
